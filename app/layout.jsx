@@ -1,4 +1,5 @@
 import '@styles/globals.css'
+import Provider from '@components/Provider'
 
 export const metadata = {
   title: 'Artify',
@@ -8,9 +9,11 @@ export const metadata = {
 const Layout = ({ children }) => {
   return (
     <html lang='en'>
-      <body>
-        <main>{children}</main>
-      </body>
+      <Provider>
+        <body>
+          <main>{children}</main>
+        </body>
+      </Provider>
     </html>
   )
 }
