@@ -1,5 +1,7 @@
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { compare } from 'bcryptjs'
 
 import { connectToDB } from '@mongodb/database'
 import User from '@models/User'
@@ -17,7 +19,36 @@ const handler = NextAuth({
         },
       },
     }),
+    CredentialsProvider({
+      name: 'Credentials',
+      async authorize(credentials, req) {
+        if (!credentials.email || !credentials.password) {
+          throw new Error('Invalid Email or Password')
+        }
+
+        await connectToDB()
+
+        /* Check if the user exists */
+        const user = await User.findOne({ email: credentials.email })
+
+        if (!user) {
+          throw new Error('Invalid Email or Password')
+        }
+
+        /* Compare password */
+        const isMatch = await compare(credentials.password, user.password)
+
+        if (!isMatch) {
+          throw new Error('Invalid Email or Password')
+        }
+
+        return user
+      },
+    }),
   ],
+
+  secret: process.env.NEXTAUTH_SECRET,
+
   callbacks: {
     async session({ sesion }) {
       const sessionUser = await User.findOne({ email: session.user.email })
@@ -51,6 +82,7 @@ const handler = NextAuth({
           console.log('Error checking if user exists: ', err.message)
         }
       }
+      return true
     },
   },
 })
