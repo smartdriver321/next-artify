@@ -1,8 +1,8 @@
 import { IoIosImages } from 'react-icons/io'
 import { BiTrash } from 'react-icons/bi'
 
-import { categories } from '@data'
 import '@styles/Form.scss'
+import { categories } from '@data'
 
 const Form = ({ type, work, setWork, handleSubmit }) => {
   const handleUploadPhotos = (e) => {
@@ -39,6 +39,7 @@ const Form = ({ type, work, setWork, handleSubmit }) => {
       <h1>{type} Your Work</h1>
       <form onSubmit={handleSubmit}>
         <h3>Which of these categories best describes your work?</h3>
+
         <div className='category-list'>
           {categories?.map((item, index) => (
             <p
