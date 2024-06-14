@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import {
   ArrowBackIosNew,
@@ -16,6 +16,8 @@ import Loader from '@components/Loader'
 import Navbar from '@components/Navbar'
 
 const WorkDetails = () => {
+  const router = useRouter()
+
   const searchParams = useSearchParams()
   const workId = searchParams.get('id')
 
@@ -77,7 +79,12 @@ const WorkDetails = () => {
         <div className='title'>
           <h1>{work.title}</h1>
           {work?.creator?._id === userId ? (
-            <div className='save' onClick={() => {}}>
+            <div
+              className='save'
+              onClick={() => {
+                router.push(`/update-work?id=${workId}`)
+              }}
+            >
               <Edit />
               <p>Edit</p>
             </div>
