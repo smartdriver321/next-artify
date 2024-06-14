@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { IconButton } from '@mui/material'
 import { Menu, Person, Search, ShoppingCart } from '@mui/icons-material'
 
