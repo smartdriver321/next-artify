@@ -1,11 +1,20 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material'
+import { useSession } from 'next-auth/react'
+import {
+  ArrowBackIosNew,
+  ArrowForwardIos,
+  Delete,
+  FavoriteBorder,
+} from '@mui/icons-material'
 
 import '@styles/WorkCard.scss'
 
 const WorkCard = ({ work }) => {
   const router = useRouter()
+
+  const { data: session, update } = useSession()
+  const userId = session?.user?._id
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -20,6 +29,22 @@ const WorkCard = ({ work }) => {
         (prevIndex - 1 + work.workPhotoPaths.length) %
         work.workPhotoPaths.length
     )
+  }
+
+  /* DEelete work */
+  const handleDelete = async () => {
+    const hasConfirmed = confirm('Are you sure you want to delete this work?')
+
+    if (hasConfirmed) {
+      try {
+        await fetch(`api/work/${work._id}`, {
+          method: 'DELETE',
+        })
+        window.location.reload()
+      } catch (err) {
+        console.log(err)
+      }
+    }
   }
 
   return (
@@ -70,6 +95,36 @@ const WorkCard = ({ work }) => {
         </div>
         <div className='price'>${work.price}</div>
       </div>
+
+      {userId === work?.creator._id ? (
+        <div
+          className='icon'
+          onClick={(e) => {
+            e.stopPropagation()
+            handleDelete()
+          }}
+        >
+          <Delete
+            sx={{
+              borderRadius: '50%',
+              backgroundColor: 'white',
+              padding: '5px',
+              fontSize: '30px',
+            }}
+          />
+        </div>
+      ) : (
+        <div className='icon'>
+          <FavoriteBorder
+            sx={{
+              borderRadius: '50%',
+              backgroundColor: 'white',
+              padding: '5px',
+              fontSize: '30px',
+            }}
+          />
+        </div>
+      )}
     </div>
   )
 }
