@@ -1,13 +1,15 @@
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material'
 
 import '@styles/WorkCard.scss'
 
 const WorkCard = ({ work }) => {
-  console.log(work)
-  /* Slidee for photos */
+  const router = useRouter()
+
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  /* Slider for photos */
   const goToNextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % work.workPhotoPaths.length)
   }
@@ -21,7 +23,12 @@ const WorkCard = ({ work }) => {
   }
 
   return (
-    <div className='work-card'>
+    <div
+      className='work-card'
+      onClick={() => {
+        router.push(`/work-details?id=${work._id}`)
+      }}
+    >
       <div className='slider-container'>
         <div
           className='slider'
@@ -56,7 +63,6 @@ const WorkCard = ({ work }) => {
       <div className='info'>
         <div>
           <h3>{work.title}</h3>
-
           <div className='creator'>
             <img src={work.creator.profileImagePath} alt='creator' />
             <span>{work.creator.username}</span> in <span>{work.category}</span>
