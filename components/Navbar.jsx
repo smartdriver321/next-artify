@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
 import { IconButton } from '@mui/material'
@@ -9,10 +10,17 @@ import { Menu, Person, Search, ShoppingCart } from '@mui/icons-material'
 import '@styles/Navbar.scss'
 
 const Navbar = () => {
+  const router = useRouter()
+
   const { data: session } = useSession()
   const user = session?.user
 
   const [dropdownMenu, setDropdownMenu] = useState(false)
+  const [query, setQuery] = useState('')
+
+  const searchWork = async () => {
+    router.push(`/search/${query}`)
+  }
 
   const handleLogout = async () => {
     signOut({ callbackUrl: '/login' })
@@ -25,9 +33,14 @@ const Navbar = () => {
       </a>
 
       <div className='navbar_search'>
-        <input type='text' placeholder='Search...' />
-        <IconButton>
-          <Search sx={{ color: 'red' }} />
+        <input
+          type='text'
+          placeholder='Search...'
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <IconButton disabled={query === ''}>
+          <Search sx={{ color: 'red' }} onClick={searchWork} />
         </IconButton>
       </div>
 
