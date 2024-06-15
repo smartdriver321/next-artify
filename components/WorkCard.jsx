@@ -5,6 +5,7 @@ import {
   ArrowBackIosNew,
   ArrowForwardIos,
   Delete,
+  Favorite,
   FavoriteBorder,
 } from '@mui/icons-material'
 
@@ -45,6 +46,23 @@ const WorkCard = ({ work }) => {
         console.log(err)
       }
     }
+  }
+
+  /* Add to wishlist */
+  const wishlist = session?.user?.wishlist
+  const isLiked = wishlist?.find((item) => item?._id === work._id)
+
+  const patchWishlist = async () => {
+    if (!session) {
+      router.push('/login')
+      return
+    }
+
+    const response = await fetch(`api/user/${userId}/wishlist/${work._id}`, {
+      method: 'PATCH',
+    })
+    const data = await response.json()
+    update({ user: { wishlist: data.wishlist } }) // update session
   }
 
   return (
@@ -114,15 +132,33 @@ const WorkCard = ({ work }) => {
           />
         </div>
       ) : (
-        <div className='icon'>
-          <FavoriteBorder
-            sx={{
-              borderRadius: '50%',
-              backgroundColor: 'white',
-              padding: '5px',
-              fontSize: '30px',
-            }}
-          />
+        <div
+          className='icon'
+          onClick={(e) => {
+            e.stopPropagation()
+            patchWishlist()
+          }}
+        >
+          {isLiked ? (
+            <Favorite
+              sx={{
+                borderRadius: '50%',
+                backgroundColor: 'white',
+                color: 'red',
+                padding: '5px',
+                fontSize: '30px',
+              }}
+            />
+          ) : (
+            <FavoriteBorder
+              sx={{
+                borderRadius: '50%',
+                backgroundColor: 'white',
+                padding: '5px',
+                fontSize: '30px',
+              }}
+            />
+          )}
         </div>
       )}
     </div>

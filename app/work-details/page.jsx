@@ -7,6 +7,7 @@ import {
   ArrowBackIosNew,
   ArrowForwardIos,
   Edit,
+  Favorite,
   FavoriteBorder,
   ShoppingCart,
 } from '@mui/icons-material'
@@ -21,7 +22,7 @@ const WorkDetails = () => {
   const searchParams = useSearchParams()
   const workId = searchParams.get('id')
 
-  const { data: session } = useSession()
+  const { data: session, update } = useSession()
   const userId = session?.user?._id
 
   const [loading, setLoading] = useState(true)
@@ -70,6 +71,22 @@ const WorkDetails = () => {
     setCurrentIndex(index)
   }
 
+  const wishlist = session?.user?.wishlist
+  const isLiked = wishlist?.find((item) => item?._id === work._id)
+
+  const patchWishlist = async () => {
+    if (!session) {
+      router.push('/login')
+      return
+    }
+
+    const response = await fetch(`api/user/${userId}/wishlist/${work._id}`, {
+      method: 'PATCH',
+    })
+    const data = await response.json()
+    update({ user: { wishlist: data.wishlist } }) // update session
+  }
+
   return loading ? (
     <Loader />
   ) : (
@@ -89,8 +106,12 @@ const WorkDetails = () => {
               <p>Edit</p>
             </div>
           ) : (
-            <div className='save' onClick={() => {}}>
-              <FavoriteBorder />
+            <div className='save' onClick={patchWishlist}>
+              {isLiked ? (
+                <Favorite sx={{ color: 'red' }} />
+              ) : (
+                <FavoriteBorder />
+              )}
               <p>Save</p>
             </div>
           )}
