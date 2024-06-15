@@ -14,6 +14,7 @@ const Navbar = () => {
 
   const { data: session } = useSession()
   const user = session?.user
+  const cart = user?.cart
 
   const [dropdownMenu, setDropdownMenu] = useState(false)
   const [query, setQuery] = useState('')
@@ -48,7 +49,7 @@ const Navbar = () => {
         {user && (
           <a href='/cart' className='cart'>
             <ShoppingCart sx={{ color: 'gray' }} />
-            Cart <span>(2)</span>
+            Cart <span>({cart?.length})</span>
           </a>
         )}
 
