@@ -3,6 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+
+import '@styles/WorkDetails.scss'
+import Loader from '@components/Loader'
+import Navbar from '@components/Navbar'
 import {
   ArrowBackIosNew,
   ArrowForwardIos,
@@ -11,10 +15,6 @@ import {
   FavoriteBorder,
   ShoppingCart,
 } from '@mui/icons-material'
-
-import '@styles/WorkDetails.scss'
-import Loader from '@components/Loader'
-import Navbar from '@components/Navbar'
 
 const WorkDetails = () => {
   const router = useRouter()
@@ -205,7 +205,7 @@ const WorkDetails = () => {
           <img
             src={work.creator.profileImagePath}
             alt='profile'
-            onClick={() => {}}
+            onClick={() => router.push(`/shop?id=${work.creator._id}`)}
           />
           <h3>Created by {work.creator.username}</h3>
         </div>

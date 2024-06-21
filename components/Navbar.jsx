@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
-import { IconButton } from '@mui/material'
-import { Menu, Person, Search, ShoppingCart } from '@mui/icons-material'
 
 import '@styles/Navbar.scss'
+import { IconButton } from '@mui/material'
+import { Menu, Person, Search, ShoppingCart } from '@mui/icons-material'
 
 const Navbar = () => {
   const router = useRouter()
